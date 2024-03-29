@@ -4,8 +4,15 @@ const net = require("net");
 console.log("Logs from your program will appear here!");
 
 // Uncomment this block to pass the first stage
-const server = net.createServer((connection) => {
+const server = net.createServer((socket) => {
   // Handle connection
+  console.log("Connection established");
+  socket.write("+PONG\r\n");
+  socket.end(() => {
+    console.log("Connection ended");
+  });
 });
 
-server.listen(6379, "127.0.0.1");
+server.listen(6379, () => {
+  console.log("Server listening on port 6379");
+});
