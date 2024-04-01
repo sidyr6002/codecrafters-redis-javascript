@@ -5,14 +5,23 @@ console.log("Logs from your program will appear here!");
 
 // Uncomment this block to pass the first stage
 const server = net.createServer((socket) => {
-  // Handle connection
-  console.log("Connection established");
-  socket.write("+PONG\r\n");
-  socket.end(() => {
-    console.log("Connection ended");
-  });
+    // Handle connection
+    console.log("Connection established");
+    // socket.write("+PONG\r\n");
+
+    // Handle Client data
+    socket.on("data", (data) => {
+        console.log("Received data: " + data.toString());
+        socket.write("+PONG\r\n");
+    });
+
+    // Close connection
+    socket.on("end", () => {
+        console.log("Connection ended");
+    });
 });
 
-server.listen(6379, () => {
-  console.log("Server listening on port 6379");
+const PORT = 6379;
+server.listen(PORT, () => {
+    console.log("Server listening on port:", PORT);
 });
