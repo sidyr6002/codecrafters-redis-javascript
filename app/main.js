@@ -1,24 +1,29 @@
 const net = require("net");
+const {
+    parseCommand
+} = require("./lib/parser/parser");
+const handleCommands = require("./handleCommands");
 
-// You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
 
-// Uncomment this block to pass the first stage
 const server = net.createServer((socket) => {
-    // Handle connection
-    console.log("Connection established");
-    // socket.write("+PONG\r\n");
+    console.log("Connection established. Client: " + socket.remoteAddress + ":" + socket.remotePort);
 
-    // Handle Client data
-    // No Changes for stage 4
+    // Handle data from client
     socket.on("data", (data) => {
-        console.log("Received data: " + data.toString());
-        socket.write("+PONG\r\n");
+        const buffer = data.toString().trim();
+        const commandParts = buffer[0] === '*' ? parseCommand(buffer) : buffer.split(' ');
+        console.log('Commands: ', commandParts);
+
+        const response = handleCommands(commandParts);
+        //console.log('Response: ' + response);
+        socket.write(response);
     });
 
     // Close connection
     socket.on("end", () => {
         console.log("Connection ended");
+        socket.end();
     });
 });
 
