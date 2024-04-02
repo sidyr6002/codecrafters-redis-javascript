@@ -1,5 +1,8 @@
+const memory = {}
+
 function handleCommands(commandParts) {
-    const command = commandParts[0].toUpperCase();
+    //console.log('Command parts(handleCommands): ', commandParts);
+    const command = commandParts[0];
 
     switch (command) {
         case "PING":
@@ -11,6 +14,26 @@ function handleCommands(commandParts) {
 
             const message = commandParts[1];
             return `+${message}\r\n`;
+        case "SET":
+            if (commandParts.length !== 3) {
+                return "-ERR wrong number of arguments for 'SET' command\r\n";
+            }
+
+            const key = commandParts[1];
+            const value = commandParts[2];
+            memory[key] = value;
+            return "+OK\r\n";
+        case "GET":
+            if (commandParts.length !== 2) {
+                return "-ERR wrong number of arguments for 'GET' command\r\n";
+            }
+
+            const getKey = commandParts[1];
+            if (!memory[getKey]) {
+                return `-ERR no such key: ${getKey}\r\n`;
+            }
+
+            return `+${memory[getKey]}\r\n`;
         default:
             return "-ERR unknown command '" + command + "'\r\n";
     }
