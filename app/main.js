@@ -1,8 +1,8 @@
 const net = require("net");
 const {
     parseCommand
-} = require("./lib/parser/parser");
-const handleCommands = require("./handleCommands");
+} = require("./lib/parsers/parser");
+const handleCommands = require("./lib/controllers/handleCommands");
 
 console.log("Logs from your program will appear here!");
 
@@ -12,6 +12,7 @@ const server = net.createServer((socket) => {
     // Handle data from client
     socket.on("data", (data) => {
         const buffer = data.toString().trim();
+        //console.log("Buffer: " + buffer);
         const commandParts = buffer[0] === '*' ? parseCommand(buffer) : buffer.split(' ');
         console.log('Commands: ', commandParts);
 

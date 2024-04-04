@@ -13,6 +13,12 @@ function parseCommand(buffer) {
         case "SET":
             const setKey = payload[1];
             const value = payload[3];
+
+            if (payload.length > 5 && payload[5].toUpperCase() === "PX") {
+                const expiry = payload[7];
+                return [command, setKey, value, payload[5], expiry];
+            }
+             
             return [command, setKey, value];
         case "GET":
             const getKey = payload[1];
