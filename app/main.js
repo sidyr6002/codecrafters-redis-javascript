@@ -1,10 +1,14 @@
 const net = require("net");
 const {
     parseCommand
-} = require("./lib/parsers/parser");
+} = require("./lib/parsers/commandParser");
 const handleCommands = require("./lib/controllers/handleCommands");
+const { argv } = require("./lib/parsers/argumentParser");
 
 console.log("Logs from your program will appear here!");
+
+const DEFAULT_PORT = 6379;
+const COMMAND_ARGUMENTS = argv();
 
 const server = net.createServer((socket) => {
     console.log("Connection established. Client: " + socket.remoteAddress + ":" + socket.remotePort);
@@ -28,7 +32,7 @@ const server = net.createServer((socket) => {
     });
 });
 
-const PORT = 6379;
+const PORT = COMMAND_ARGUMENTS.port ? COMMAND_ARGUMENTS.port : DEFAULT_PORT;
 server.listen(PORT, () => {
     console.log("Server listening on port:", PORT);
 });

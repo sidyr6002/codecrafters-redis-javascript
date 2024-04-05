@@ -2,7 +2,7 @@ const memory = {}
 
 function handleCommands(commandParts) {
     //console.log('Command parts(handleCommands): ', commandParts);
-    const command = commandParts[0];
+    const command = commandParts[0].toUpperCase();
 
     switch (command) {
         case "PING":
