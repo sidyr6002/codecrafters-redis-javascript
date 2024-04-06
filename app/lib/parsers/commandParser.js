@@ -23,6 +23,11 @@ function parseCommand(buffer) {
         case "GET":
             const getKey = payload[1];
             return [command, getKey];
+        case "INFO":
+            const infoTypes = payload.filter(element => {
+                return element[0] !== "$";
+            });
+            return [command, infoTypes];
         default:
             return [command];
     }

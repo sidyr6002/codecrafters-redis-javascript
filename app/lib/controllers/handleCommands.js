@@ -1,3 +1,4 @@
+const handleInfos = require("./handleInfo");
 const memory = {}
 
 function handleCommands(commandParts) {
@@ -42,6 +43,13 @@ function handleCommands(commandParts) {
             }
 
             return `+${memory[getKey]}\r\n`;
+        case "INFO":
+            if (commandParts.length !== 2) {
+                return "-ERR wrong number of arguments for 'INFO' command\r\n";
+            }
+
+            const infoTypes = commandParts[1];
+            return handleInfos(infoTypes);
         default:
             return "-ERR unknown command '" + command + "'\r\n";
     }
