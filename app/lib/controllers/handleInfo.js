@@ -5,13 +5,15 @@ let replicationInfos = require("../types/replicationInfo");
 
 
 function nomalizeReplicationInfo(replicationInfos) {
-    let response = "";
+    let response = "", str = "";
 
     Object.entries(replicationInfos).forEach((info) => {
         //console.log('Info:', info);
         let entry = info[0] + ":" + info[1];
-        response += "$" + entry.length + "\r\n" + entry + "\r\n";
+        str += entry + "\r\n";
     });
+
+    response += '$' + str.length + "\r\n" + str + "\r\n";
 
     return response;
 }
@@ -24,7 +26,7 @@ function handleInfos(infoTypes) {
     infoTypes.forEach(infoType => {
         switch (infoType.toUpperCase()) {
             case "REPLICATION":
-                console.log('Command: ', COMMAND_ARGUMENTS);
+                //console.log('Command: ', COMMAND_ARGUMENTS);
                 replicationInfos.role = COMMAND_ARGUMENTS.replicaof ? "slave" : "master";
                 result += nomalizeReplicationInfo(replicationInfos);
                 break;
