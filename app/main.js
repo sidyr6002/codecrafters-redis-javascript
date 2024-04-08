@@ -4,6 +4,7 @@ const {
 } = require("./lib/parsers/commandParser");
 const handleCommands = require("./lib/controllers/handleCommands");
 const { argv } = require("./lib/parsers/argumentParser");
+const { createConnection } = require("./lib/handshake/createConnection");
 
 console.log("Logs from your program will appear here!");
 
@@ -32,7 +33,17 @@ const server = net.createServer((socket) => {
     });
 });
 
-const PORT = COMMAND_ARGUMENTS.port ? COMMAND_ARGUMENTS.port : DEFAULT_PORT;
-server.listen(PORT, () => {
-    console.log("Server listening on port:", PORT);
-});
+const startServer = () => { 
+    const PORT = COMMAND_ARGUMENTS.port ? COMMAND_ARGUMENTS.port : DEFAULT_PORT;
+    const replicaof = COMMAND_ARGUMENTS.replicaof;
+
+    server.listen(PORT, () => {
+        console.log("Server listening on port:", PORT);
+    });
+
+    if (replicaof) {
+        createConnection(replicaof[0], replicaof[1]);
+    }
+}
+
+startServer();
