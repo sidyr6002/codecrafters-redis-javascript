@@ -7,6 +7,10 @@ const argv = () => {
         if (arg === "--port") {
             result.port = process.argv[index + 1];
         }
+
+        if (arg === "--replicaof") {
+            result.replicaof = [process.argv[index + 1], process.argv[index + 2]];
+        }
     });
 
     return result;

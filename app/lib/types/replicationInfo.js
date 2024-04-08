@@ -1,4 +1,4 @@
-const replicationInfo = {
+let replicationInfo = {
     role: "master",
 }
 

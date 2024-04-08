@@ -1,4 +1,8 @@
-const replicationInfos = require("../types/replicationInfo");
+const { argv } = require("./../parsers/argumentParser");
+const COMMAND_ARGUMENTS = argv();
+
+let replicationInfos = require("../types/replicationInfo");
+
 
 function nomalizeReplicationInfo(replicationInfos) {
     let response = "";
@@ -20,6 +24,8 @@ function handleInfos(infoTypes) {
     infoTypes.forEach(infoType => {
         switch (infoType.toUpperCase()) {
             case "REPLICATION":
+                console.log('Command: ', COMMAND_ARGUMENTS);
+                replicationInfos.role = COMMAND_ARGUMENTS.replicaof ? "slave" : "master";
                 result += nomalizeReplicationInfo(replicationInfos);
                 break;
             default:

@@ -48,7 +48,7 @@ function handleCommands(commandParts) {
                 return "-ERR wrong number of arguments for 'INFO' command\r\n";
             }
 
-            const infoTypes = commandParts[1];
+            const infoTypes = commandParts.slice(1);
             return handleInfos(infoTypes);
         default:
             return "-ERR unknown command '" + command + "'\r\n";

@@ -27,7 +27,7 @@ function parseCommand(buffer) {
             const infoTypes = payload.filter(element => {
                 return element[0] !== "$";
             });
-            return [command, infoTypes];
+            return [command, ...infoTypes];
         default:
             return [command];
     }
