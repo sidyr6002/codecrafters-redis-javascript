@@ -13,6 +13,7 @@ const createConnection = (host, port) => {
         socket.write("*1\r\n$4\r\nping\r\n");
     });
 
+    //add commands
     socket.on("data", () => {
         conf.forEach((c) => {
             socket.write(c);
