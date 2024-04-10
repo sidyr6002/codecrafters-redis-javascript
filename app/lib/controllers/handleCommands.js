@@ -2,7 +2,7 @@ const handleInfos = require("./handleInfo");
 const memory = {}
 
 function handleCommands(commandParts) {
-    //console.log('Command parts(handleCommands): ', commandParts);
+    console.log('Command parts(handleCommands): ', commandParts);
     const command = commandParts[0].toUpperCase();
 
     switch (command) {
@@ -50,6 +50,11 @@ function handleCommands(commandParts) {
 
             const infoTypes = commandParts.slice(1);
             return handleInfos(infoTypes);
+        case "REPLCONF":
+            if (commandParts.length !== 3 && commandParts.length !== 5) {
+                return "-ERR wrong number of arguments for 'REPLCONF' command\r\n";
+            }
+            return `+OK\r\n`;
         default:
             return "-ERR unknown command '" + command + "'\r\n";
     }

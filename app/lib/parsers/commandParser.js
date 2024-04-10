@@ -28,6 +28,12 @@ function parseCommand(buffer) {
                 return element[0] !== "$";
             });
             return [command, ...infoTypes];
+        case "REPLCONF":
+            const replicaofInfo = payload.filter(element => {
+                return element[0] !== "$";
+            })
+
+            return [command, ...replicaofInfo];
         default:
             return [command];
     }
