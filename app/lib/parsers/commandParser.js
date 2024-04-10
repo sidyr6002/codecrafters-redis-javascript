@@ -34,6 +34,12 @@ function parseCommand(buffer) {
             })
 
             return [command, ...replicaofInfo];
+        case "PSYNC":
+            const psyncInfo = payload.filter(element => {
+                return element.includes("$");
+            })
+
+            return [command, ...psyncInfo];
         default:
             return [command];
     }

@@ -1,8 +1,9 @@
 const handleInfos = require("./handleInfo");
+let replicaofInfo = require("../types/replicationInfo");
 const memory = {}
 
 function handleCommands(commandParts) {
-    console.log('Command parts(handleCommands): ', commandParts);
+    //console.log('Command parts(handleCommands): ', commandParts);
     const command = commandParts[0].toUpperCase();
 
     switch (command) {
@@ -55,6 +56,12 @@ function handleCommands(commandParts) {
                 return "-ERR wrong number of arguments for 'REPLCONF' command\r\n";
             }
             return `+OK\r\n`;
+        case "PSYNC":
+            if (commandParts.length !== 3) {
+                return "-ERR wrong number of arguments for 'PSYNC' command\r\n";
+            }
+            
+            return `+FULLRESYNC ${replicaofInfo.master_replid} 0\r\n`
         default:
             return "-ERR unknown command '" + command + "'\r\n";
     }
