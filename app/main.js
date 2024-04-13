@@ -21,9 +21,9 @@ const server = net.createServer((socket) => {
         const commandParts = buffer[0] === '*' ? parseCommand(buffer) : buffer.split(' ');
         console.log('Commands: ', commandParts);
 
-        const response = handleCommands(commandParts);
+        handleCommands(socket, commandParts);
         //console.log('Response: ' + response);
-        socket.write(response);
+        //socket.write(response);
     });
 
     // Close connection

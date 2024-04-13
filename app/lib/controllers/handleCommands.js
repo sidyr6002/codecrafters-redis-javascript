@@ -1,21 +1,27 @@
 const handleInfos = require("./handleInfo");
+const sendRDBFile = require("./handleRDBFile");
 let replicaofInfo = require("../types/replicationInfo");
-const memory = {}
 
-function handleCommands(commandParts) {
+const memory = {};
+
+function handleCommands(socket, commandParts) {
     //console.log('Command parts(handleCommands): ', commandParts);
     const command = commandParts[0].toUpperCase();
 
     switch (command) {
         case "PING":
-            return "+PONG\r\n";
+            socket.write("+PONG\r\n");
+            break;
+
         case "ECHO":
             if (commandParts.length !== 2) {
                 return "-ERR wrong number of arguments for 'ECHO' command\r\n";
             }
 
             const message = commandParts[1];
-            return `+${message}\r\n`;
+            socket.write(`+${message}\r\n`);
+            break;
+
         case "SET":
             if (commandParts.length < 3 || commandParts.length > 5) {
                 return "-ERR wrong number of arguments for 'SET' command\r\n";
@@ -29,10 +35,11 @@ function handleCommands(commandParts) {
                 setTimeout(() => {
                     delete memory[key];
                 }, expiry);
-            } else
-                memory[key] = value;
+            } else memory[key] = value;
 
-            return "+OK\r\n";
+            socket.write("+OK\r\n");
+            break;
+
         case "GET":
             if (commandParts.length !== 2) {
                 return "-ERR wrong number of arguments for 'GET' command\r\n";
@@ -40,28 +47,40 @@ function handleCommands(commandParts) {
 
             const getKey = commandParts[1];
             if (!memory[getKey]) {
-                return `$-1\r\n`;
+                socket.write(`$-1\r\n`);
+                break;
             }
 
-            return `+${memory[getKey]}\r\n`;
+            socket.write(`+${memory[getKey]}\r\n`);
+            break;
+
         case "INFO":
             if (commandParts.length !== 2) {
                 return "-ERR wrong number of arguments for 'INFO' command\r\n";
             }
 
             const infoTypes = commandParts.slice(1);
-            return handleInfos(infoTypes);
+            const infoResponse = handleInfos(infoTypes);
+            socket.write(infoResponse);
+            break;
+
         case "REPLCONF":
             if (commandParts.length !== 3 && commandParts.length !== 5) {
                 return "-ERR wrong number of arguments for 'REPLCONF' command\r\n";
             }
-            return `+OK\r\n`;
+
+            socket.write(`+OK\r\n`);
+            break;
+
         case "PSYNC":
             if (commandParts.length !== 3) {
                 return "-ERR wrong number of arguments for 'PSYNC' command\r\n";
             }
-            
-            return `+FULLRESYNC ${replicaofInfo.master_replid} 0\r\n`
+
+            socket.write(`+FULLRESYNC ${replicaofInfo.master_replid} 0\r\n`);
+            sendRDBFile(socket);
+            break;
+
         default:
             return "-ERR unknown command '" + command + "'\r\n";
     }
